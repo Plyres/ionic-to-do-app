@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ToDoList } from '../to-do-list';
+import { ToDoContent } from '../to-do-content';
 
 
 @Component({
@@ -8,7 +8,7 @@ import { ToDoList } from '../to-do-list';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  todoList: ToDoList[] = [];
+  todoList: ToDoContent[] = [];
   newTodoText: string = '';
 
   constructor() {}
@@ -16,14 +16,22 @@ export class HomePage {
   addTodo() {
     if (this.newTodoText !== '') {
       this.todoList.push({
-        toDoContent: this.newTodoText 
+        toDoText: this.newTodoText,
+        completed: false
       }
       );
       this.newTodoText = '';
     }
   }
 
-  removeToDo(){
-    this.todoList = this.todoList
+  completeToDoContent(todo: ToDoContent) {
+    todo.completed = !todo.completed;
+  }
+
+  removeToDoContentFromList(todo: ToDoContent) {
+    const index = this.todoList.indexOf(todo);
+    if (index > -1) {
+      this.todoList.splice(index, 1);
+    }
   }
 }
