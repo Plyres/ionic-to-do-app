@@ -13,20 +13,25 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list>
-    <ion-item-sliding *ngFor="let todo of todoList">
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="todo.completed" (ionChange)="completeToDoContent(todo)"></ion-checkbox>
-        <ion-label>{{ todo.toDoText }}</ion-label>
-        <ion-item-option color="danger" (click)="removeToDoContentFromList(todo)">
-          <ion-icon name="trash" slot="icon-only"></ion-icon>
-        </ion-item-option>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
+  <div class="todo-container">
+    <ion-list>
+      <ion-item-sliding *ngFor="let todo of todoList">
+        <ion-item>
+          <ion-checkbox slot="start" (ionChange)="completeToDoContent(todo)"></ion-checkbox>
+          <ion-label [class.completed]="todo.completed" (click)="goToTaskDetail(todo.id)"> {{ todo.toDoText }}</ion-label>
+          <ion-item-option color="danger" (click)="removeToDoContentFromList(todo.id)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
 
-  <ion-item>
-    <ion-input [(ngModel)]="newTodoText" placeholder="Add a new todo"></ion-input>
-    <ion-button (click)="addTodo()">Add</ion-button>
-  </ion-item>
+  <div class="todo-add-button-container">
+    <ion-item>
+      <ion-input [(ngModel)]="newTodoText" placeholder="Add a new todo"></ion-input>
+      <ion-button class="todo-add-button" (click)="addTodo()">Add</ion-button>
+    </ion-item>
+  </div>
+
 </ion-content>

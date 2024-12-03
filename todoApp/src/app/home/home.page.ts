@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { ToDoContent } from '../to-do-content';
-
+import { ToDoContent } from '../model/todo-content';
+import { Router } from '@angular/router';
+import { TodoListService } from '../services/todo-list.service';
 
 @Component({
   selector: 'app-home',
@@ -11,27 +12,37 @@ export class HomePage {
   todoList: ToDoContent[] = [];
   newTodoText: string = '';
 
-  constructor() {}
+  constructor(private todoService: TodoListService, private router: Router) {}
 
-  addTodo() {
-    if (this.newTodoText !== '') {
-      this.todoList.push({
-        toDoText: this.newTodoText,
-        completed: false
-      }
-      );
-      this.newTodoText = '';
-    }
+  goToTaskDetail(id: string) {
+    this.router.navigate(['/todo-task', id]);
   }
 
   completeToDoContent(todo: ToDoContent) {
     todo.completed = !todo.completed;
+    this.todoService.updateTodo(todo);
   }
 
-  removeToDoContentFromList(todo: ToDoContent) {
-    const index = this.todoList.indexOf(todo);
-    if (index > -1) {
-      this.todoList.splice(index, 1);
+  loadTodos() {
+    this.todoList = this.todoService.getAllTodos();
+  }
+
+  addTodo() {
+    if (this.newTodoText.trim() !== '') {
+      const newTodo: ToDoContent = {
+        id: Date.now().toString(),
+        toDoText: this.newTodoText,
+        completed: false,
+        details: 'Test'
+      };
+      this.todoService.addTodo(newTodo);
+      this.newTodoText = '';
+      this.loadTodos();
     }
+  }
+
+  removeToDoContentFromList(id: string) {
+    this.todoService.removeToDoContentFromList(id);
+    this.loadTodos();
   }
 }

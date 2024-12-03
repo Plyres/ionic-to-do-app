@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/todo-list"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Task Detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="todo">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ todo.toDoText }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Status:</strong> {{ todo.completed ? 'Completed' : 'Pending' }}</p>
+      <p><strong>Details:</strong> {{ todo.details }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
