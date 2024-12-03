@@ -1,0 +1,41 @@
+ion-header {
+    background-color: #4a90e2; /* Couleur d'arrière-plan */
+  }
+  
+  ion-content {
+    background-color: #f4f4f4; /* Couleur d'arrière-plan de la page */
+    
+    h2 {
+      margin-top: 16px;
+      text-align: center;
+      font-weight: bold;
+      color: #333; /* Couleur du texte */
+      font-size: 1.5em; /* Taille du texte */
+    }
+  
+    p {
+      margin-top: 12px;
+      margin-left: 16px;
+      margin-right: 16px;
+      font-size: 1.1em; /* Taille du texte */
+      color: #666; /* Couleur du texte */
+      
+      strong {
+        color: #333; /* Couleur pour les textes en gras */
+      }
+    }
+  
+  }
+  
+  ion-button {
+     display:block;
+     margin-left:auto;
+     margin-right:auto;
+     margin-top:20px; 
+     --background:#4a90e2; 
+     --color:white;
+  
+     &:hover {
+       opacity:.8; 
+     }
+  }

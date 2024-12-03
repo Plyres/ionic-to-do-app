@@ -1,0 +1,28 @@
+.todo-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+  
+ion-list {
+    width: 100%;
+}
+
+.todo-add-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.todo-add-button {
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    max-width: 200px;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #888;
+  }

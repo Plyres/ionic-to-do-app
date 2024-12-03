@@ -1,35 +1,72 @@
 import { Injectable } from '@angular/core';
 import { ToDoContent } from '../model/todo-content';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoListService {
-  
+
+  private userId: string | null = null;
+
   todoList: ToDoContent[] = [];
-  
-  constructor() {}
- 
-  getAllTodos(): ToDoContent[] {
-    return this.todoList;
-  }
 
-  getTodoById(id: string): ToDoContent | undefined {
-    return this.todoList.find(todo => todo.id === id);
-  }
-
-  addTodo(todo: ToDoContent) {
-    this.todoList.push(todo);
-  }
-
-  updateTodo(todo: ToDoContent) {
-    const index = this.todoList.findIndex(t => t.id === todo.id);
-    if (index !== -1) {
-      this.todoList[index] = todo;
+  constructor(private authService: AuthService) {
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      this.userId = JSON.parse(currentUser).email;
     }
   }
 
-  removeToDoContentFromList(id: string) {
-    this.todoList = this.todoList.filter(todo => todo.id !== id);
+  private getCurrentUserTodoList(): ToDoContent[] {
+    const currentUser = this.authService.getCurrentUser();
+    return currentUser ? currentUser.todoList : [];
   }
+
+  getAllTodos(): ToDoContent[] {
+    return this.getCurrentUserTodoList();
+  }
+
+  getTodoById(id: string): ToDoContent | undefined {
+    const todoList = this.getCurrentUserTodoList();
+    return todoList.find(todo => todo.id === id);
+  }
+
+  addTodoTask(todo: ToDoContent) {
+    const todos = this.getCurrentUserTodoList();
+    todos.push(todo);
+    const currentUser = this.authService.getCurrentUser();
+
+    if (currentUser) {
+      currentUser.todoList = todos; 
+      this.authService.updateCurrentUser(currentUser);
+    }
+  }
+
+  updateTodo(updatedTodo: ToDoContent) {
+    const todos = this.getCurrentUserTodoList();
+    const index = todos.findIndex(t => t.id === updatedTodo.id);
+
+    if (index !== -1) {
+      todos[index] = updatedTodo; 
+      const currentUser = this.authService.getCurrentUser();
+
+      if (currentUser) {
+        currentUser.todoList = todos;
+        this.authService.updateCurrentUser(currentUser);
+      }
+    }
+  }
+
+  removeToDoTaskFromList(id: string) {
+    const todos = this.getCurrentUserTodoList();
+    const updatedTodos = todos.filter(t => t.id !== id); 
+    const currentUser = this.authService.getCurrentUser();
+
+    if (currentUser) {
+      currentUser.todoList = updatedTodos;
+      this.authService.updateCurrentUser(currentUser);
+    }
+  }
+
 }

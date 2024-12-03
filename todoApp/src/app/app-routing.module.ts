@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { TodoTaskComponent } from './todo-task/components/todo-task.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -13,10 +14,22 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'sign-in',
+    loadChildren: () => import('./auth/sign-in/sign-in.module').then( m => m.SignInPageModule)
+  },
+  {
+    path: 'todo-list',
+    loadChildren: () => import('./todo/todo-list/todo-list.module').then( m => m.TodoListPageModule),
+    canActivate: [authGuard]
+  },
+  {
     path: 'todo-task/:id',
     component: TodoTaskComponent,
-    pathMatch: 'full'
-  },
+    pathMatch: 'full',
+    canActivate: [authGuard]
+  }
+  
+
 ];
 
 @NgModule({

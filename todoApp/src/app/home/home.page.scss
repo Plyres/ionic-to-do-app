@@ -1,28 +1,18 @@
-.todo-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-  
-ion-list {
-    width: 100%;
-}
-
-.todo-add-button-container {
-    display: flex;
-    justify-content: center;
+.login-button {
     margin-top: 20px;
 }
 
-.todo-add-button {
-    --padding-start: 20px;
-    --padding-end: 20px;
-    --padding-top: 10px;
-    --padding-bottom: 10px;
-    max-width: 200px;
-}
+.register-link {
+    text-align: center;
+    margin-top: 15px;
 
-.completed {
-    text-decoration: line-through;
-    color: #888;
-  }
+    p {
+        margin: 0;
+        font-size: 14px;
+
+        a {
+            color: var(--ion-color-primary);
+            font-weight: bold;
+        }
+    }
+}

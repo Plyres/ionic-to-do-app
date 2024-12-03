@@ -1,16 +1,14 @@
 import { Component } from '@angular/core';
-import { ToDoContent } from '../model/todo-content';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 import { AlertController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-register',
+  templateUrl: './sign-in.page.html',
+  styleUrls: ['./sign-in.page.scss'],
 })
-export class HomePage {
+export class SignInPage {
   email: string = '';
   password: string = '';
 
@@ -18,12 +16,18 @@ export class HomePage {
     private authService: AuthService,
     private router: Router,
     private alertController: AlertController
-  ) {}
+  ) { }
 
-  async login() {
+  async register() {
     try {
-      await this.authService.login(this.email, this.password);
-      this.router.navigateByUrl('/todo-list');
+      await this.authService.register(this.email, this.password);
+      const alert = await this.alertController.create({
+        header: 'Success',
+        message: 'Registration successful. Please log in.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      this.router.navigateByUrl('/home');
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',
@@ -32,9 +36,5 @@ export class HomePage {
       });
       await alert.present();
     }
-  }
-
-  goToSignIn() {
-    this.router.navigate(['/sign-in']);
   }
 }
