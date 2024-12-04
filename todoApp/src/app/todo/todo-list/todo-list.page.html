@@ -21,10 +21,9 @@
   <div class="todo-container">
     <ion-list>
       <ion-item-sliding *ngFor="let todo of todoList">
-        <ion-item>
+        <ion-item *ngIf="todo.toDoText != ''">
           <ion-checkbox slot="start" (ionChange)="completeToDoContent(todo)"></ion-checkbox>
-          <ion-label [class.completed]="todo.completed" (click)="goToTaskDetail(todo.id)"> {{ todo.toDoText
-            }}</ion-label>
+          <ion-label [class.completed]="todo.completed" (click)="goToTaskDetail(todo.id)"> {{ todo.toDoText }}</ion-label>
           <ion-item-option color="danger" (click)="removeToDoTaskFromList(todo.id)">
             <ion-icon name="trash" slot="icon-only"></ion-icon>
           </ion-item-option>

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { User } from '../model/user-model';
+import { ApiService } from '../api.service';
+import { ToDoContent } from '../model/todo-content';
 
 @Injectable({
   providedIn: 'root'
@@ -8,45 +11,67 @@ import { User } from '../model/user-model';
 export class AuthService {
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this._isAuthenticated.asObservable();
-  private users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
 
-  constructor() {
+  constructor(private apiService: ApiService) {
     const user = localStorage.getItem('currentUser');
     if (user) {
       this._isAuthenticated.next(true);
     }
   }
 
-  register(email: string, password: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const existingUser = this.users.find(u => u.email === email);
-      if (existingUser) {
-        reject('User already exists');
-      } else {
-        const newUser: User = { email, password, todoList: [] };
-        this.users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(this.users));
-        resolve();
-      }
-    });
+  register(email: string, password: string, todoList: Array<ToDoContent>) {
+    const newUser: User = { email, password, todoList };
+    this.apiService.postData(`users/${email}`, JSON.stringify(newUser)).subscribe(x => {x})
   }
 
-  login(email: string, password: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const user = this.users.find(u => u.email === email && u.password === password);
-      if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user)); // Stocker l'utilisateur actuel
-        this._isAuthenticated.next(true);
-        resolve();
-      } else {
-        reject('Invalid email or password');
-      }
-    });
+  // login(email: string, password: string): Observable<void> {
+  //   return this.apiService.getData(`users/${email}`).pipe(
+  //     map((response: any) => {
+  //       // Récupérer la première (et normalement unique) clé de l'objet response
+  //       const userKey = Object.keys(response)[0];
+  //       const user: User = response[userKey];
+  //       console.log(user)
+       
+  //       if (user && user.password === password) {
+  //         localStorage.setItem('currentUser', JSON.stringify(user));
+  //         this._isAuthenticated.next(true);
+  //       } else {
+  //         throw new Error('Invalid email or password');
+  //       }
+  //     })
+  //   );
+  // }
+  login(email: string, password: string): Observable<void> {
+    return this.apiService.getData(`users/${email}`).pipe(
+      map((response: any) => {
+        let user: User;
+  
+        if (response && typeof response === 'object') {
+          if (response.email) {
+            // Le cas où la réponse est directement l'objet utilisateur
+            user = response as User;
+          } else {
+            // Le cas où la réponse est un objet contenant l'utilisateur sous une clé
+            const userKey = Object.keys(response)[0];
+            user = response[userKey] as User;
+          }
+        } else {
+          throw new Error('Invalid response format');
+        }
+  
+        if (user && user.password === password) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this._isAuthenticated.next(true);
+        } else {
+          throw new Error('Invalid email or password');
+        }
+      })
+    );
   }
 
   logout() {
     localStorage.removeItem('currentUser');
-    this._isAuthenticated.next(false); // Marquer l'utilisateur comme non authentifié
+    this._isAuthenticated.next(false);
   }
 
   getCurrentUser(): User | null {
@@ -54,13 +79,12 @@ export class AuthService {
     return user ? JSON.parse(user) : null;
   }
 
-  updateCurrentUser(user: User) {
-    const index = this.users.findIndex(u => u.email === user.email);
-    if (index !== -1) {
-      this.users[index] = user; // Mettre à jour l'utilisateur dans le tableau
-      localStorage.setItem('users', JSON.stringify(this.users)); // Sauvegarder les utilisateurs mis à jour
-      localStorage.setItem('currentUser', JSON.stringify(user)); // Mettre à jour l'utilisateur actuel
-    }
+  updateCurrentUser(user: User): Observable<void> {
+    return this.apiService.putData(`users/${user.email}`, JSON.stringify(user)).pipe(
+      tap(() => {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+      })
+    );
   }
 
   isLoggedIn(): boolean {

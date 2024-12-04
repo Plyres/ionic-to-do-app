@@ -14,19 +14,19 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'sign-in',
-    loadChildren: () => import('./auth/sign-in/sign-in.module').then( m => m.SignInPageModule)
+    path: 'sign-up',
+    loadChildren: () => import('./sign-up/sign-up.module').then( m => m.SignUpPageModule)
   },
   {
     path: 'todo-list',
     loadChildren: () => import('./todo/todo-list/todo-list.module').then( m => m.TodoListPageModule),
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   },
   {
     path: 'todo-task/:id',
     component: TodoTaskComponent,
     pathMatch: 'full',
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   }
   
 

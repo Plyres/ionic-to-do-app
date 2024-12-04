@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ToDoContent } from '../model/todo-content';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './sign-in.page.html',
-  styleUrls: ['./sign-in.page.scss'],
+  templateUrl: './sign-up.page.html',
+  styleUrls: ['./sign-up.page.scss'],
 })
-export class SignInPage {
+export class SignUpPage {
   email: string = '';
   password: string = '';
+  todoList: Array<ToDoContent> = [];
 
   constructor(
     private authService: AuthService,
@@ -20,7 +22,15 @@ export class SignInPage {
 
   async register() {
     try {
-      await this.authService.register(this.email, this.password);
+      const newTodo: ToDoContent = {
+        id: Date.now().toString(),
+        toDoText: '',
+        completed: false,
+        details: ""
+      };
+      
+      this.todoList.push(newTodo);
+      await this.authService.register(this.email, this.password, this.todoList);
       const alert = await this.alertController.create({
         header: 'Success',
         message: 'Registration successful. Please log in.',

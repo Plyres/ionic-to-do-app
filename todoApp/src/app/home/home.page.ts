@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { ToDoContent } from '../model/todo-content';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { AlertController } from '@ionic/angular';
 
@@ -11,26 +10,37 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  email: string = '';
-  password: string = '';
+  loginForm: FormGroup;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController
-  ) {}
+    private alertController: AlertController,
+    private formBuilder: FormBuilder
+  ) {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.required]],
+      password: ['', [Validators.required, Validators.required]]
+    });
+  }
 
-  async login() {
-    try {
-      await this.authService.login(this.email, this.password);
-      this.router.navigateByUrl('/todo-list');
-    } catch (error) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'error',
-        buttons: ['OK']
-      });
-      await alert.present();
+  login() {
+    if (this.loginForm.valid) {
+      const email = this.loginForm.controls["email"].value;
+      const password = this.loginForm.controls["password"].value;
+      this.authService.login(email, password).subscribe(
+        () => {
+          this.router.navigateByUrl('/todo-list');
+        },
+        async (error) => {
+          const alert = await this.alertController.create({
+            header: 'Error',
+            message: error.message || 'An error occurred during login',
+            buttons: ['OK']
+          });
+          await alert.present();
+        }
+      );
     }
   }
 

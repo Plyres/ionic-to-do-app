@@ -5,21 +5,21 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form (ngSubmit)="login()">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+      <ion-input type="email" formControlName="email" required></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+      <ion-input type="password" formControlName="password" required></ion-input>
     </ion-item>
 
-    <ion-button expand="full" type="submit" class="login-button">Login</ion-button>
+    <ion-button expand="full" type="submit" class="login-button" [disabled]="!loginForm.valid">Login</ion-button>
 
     <div class="register-link">
-      <p>Don't have an account? <a routerLink="/sign-in">Sign in here</a></p>
+      <p>Don't have an account? <a routerLink="/sign-up">Sign up here</a></p>
     </div>
   </form>
 </ion-content>
