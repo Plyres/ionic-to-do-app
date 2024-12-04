@@ -39,3 +39,18 @@ ion-header {
        opacity:.8; 
      }
   }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 16px 0; // Ajoutez un peu d'espace autour de l'image
+  }
+  
+  .normal-image {
+    width: 80%; // Limitez la largeur du thumbnail à 80% de l'écran
+    max-width: 500px; // Vous pouvez définir une largeur maximale si nécessaire
+    height: 80%; // Limitez la largeur du thumbnail à 80% de l'écran
+    max-height: 500px; // Vous pouvez définir une largeur maximale si nécessaire
+    border-radius: 8px; // Optionnel : arrondir les coins de l'image
+  }

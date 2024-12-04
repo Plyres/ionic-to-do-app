@@ -25,6 +25,9 @@
           <ion-checkbox slot="start" (ionChange)="completeToDoContent(todo)"></ion-checkbox>
           <ion-label [class.completed]="todo.completed" (click)="goToTaskDetail(todo.id)"> {{
             todo.toDoText}}</ion-label>
+          <ion-thumbnail slot="end" *ngIf="todo.imageUrl">
+            <img [src]="todo.imageUrl">
+          </ion-thumbnail>
           <ion-item-option color="primary" (click)="updateTodoTask(todo)">
             <ion-icon name="create" slot="icon-only"></ion-icon>
           </ion-item-option>

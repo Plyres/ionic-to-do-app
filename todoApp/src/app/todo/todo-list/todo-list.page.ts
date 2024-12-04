@@ -5,6 +5,7 @@ import { ToDoContent } from 'src/app/model/todo-content';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/model/user-model';
 import { AlertController } from '@ionic/angular';
+import { CameraResultType } from '@capacitor/camera';
 
 @Component({
   selector: 'app-todo-list',
@@ -51,7 +52,8 @@ export class TodoListPage implements OnInit {
         id: Date.now().toString(),
         toDoText:this.todoContentForm.controls["newTodoText"].value,
         completed: false,
-        details: ''
+        details: '',
+        imageUrl: ''
       };
       this.todoList.push(newTodo);
       this.updateUserTodoList();

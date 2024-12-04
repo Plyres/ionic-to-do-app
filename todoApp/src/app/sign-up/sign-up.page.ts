@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ToDoContent } from '../model/todo-content';
+import { CameraResultType } from '@capacitor/camera';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +27,8 @@ export class SignUpPage {
         id: Date.now().toString(),
         toDoText: '',
         completed: false,
-        details: ""
+        details: "",
+        imageUrl: ''
       };
       
       this.todoList.push(newTodo);

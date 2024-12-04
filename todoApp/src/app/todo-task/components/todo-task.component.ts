@@ -23,11 +23,20 @@ export class TodoTaskComponent  implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
+;
     if (id) {
       this.todo = this.todoService.getTodoById(id);
     }
   }
-  
+
+  async addPhotoToTodo(todoId: string) {
+    try {
+      await this.todoService.takePictureForTodo(todoId);
+      this.todo = this.todoService.getTodoById(todoId);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la photo', error);
+      // Gérer l'erreur (par exemple, afficher un message à l'utilisateur)
+    }
+  }
 
 }
