@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToDoContent } from 'src/app/model/todo-content';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/model/user-model';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,18 +20,17 @@ export class TodoListPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private alertController: AlertController
   ) {
     this.todoContentForm = new FormGroup({
-      newTodoText: new FormControl('', Validators.required),
-      details: new FormControl('Test', Validators.required)
+      newTodoText: new FormControl('', Validators.required)
     });
   }
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     if (this.currentUser) {
-      this.todoList = this.currentUser.todoList || [];
+      this.todoList = this.currentUser.todoList;
     } else {
       this.router.navigate(['/home']);
     }
@@ -51,7 +51,7 @@ export class TodoListPage implements OnInit {
         id: Date.now().toString(),
         toDoText:this.todoContentForm.controls["newTodoText"].value,
         completed: false,
-        details: this.todoContentForm.controls["details"].value
+        details: ''
       };
       this.todoList.push(newTodo);
       this.updateUserTodoList();
@@ -77,5 +77,41 @@ export class TodoListPage implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/home']);
+  }
+
+  async updateTodoTask(todo: ToDoContent) {
+    const alert = await this.alertController.create({
+      header: 'Update Todo',
+      inputs: [
+        {
+          name: 'toDoText',
+          type: 'text',
+          value: todo.toDoText,
+          placeholder: 'Todo Text'
+        },
+        {
+          name: 'details',
+          type: 'textarea',
+          value: todo.details,
+          placeholder: 'Details'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Update',
+          handler: (data) => {
+            todo.toDoText = data.toDoText;
+            todo.details = data.details;
+            this.updateUserTodoList();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
