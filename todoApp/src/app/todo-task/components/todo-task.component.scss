@@ -1,3 +1,16 @@
+ion-header {
+  background: linear-gradient(135deg, #4a90e2, #9013fe);
+  color: white;
+
+  ion-toolbar {
+    --background: transparent;
+  }
+
+  ion-title {
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+}
 
 ion-content {
   --background: #242424;
@@ -9,10 +22,11 @@ ion-card {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 1200px;
-  margin: auto; 
+  margin: auto;
   width: calc(100% - 32px);
   margin-top: 20px;
 }
+
 ion-card-title {
   font-size: 1.5rem;
   font-weight: bold;
@@ -36,14 +50,14 @@ ion-card-content p {
 
 ion-button {
   margin-top: 20px;
-  --background: #4a90e2; 
-  --color: white; 
-  height: 50px; 
+  --background: #4a90e2;
+  --color: white;
+  height: 50px;
   max-width: 1200px;
-  width: calc(100% - 32px); 
-  border-radius: 25px; 
+  width: calc(100% - 32px);
+  border-radius: 25px;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   margin-left: auto;
   margin-right: auto;
@@ -57,14 +71,15 @@ ion-button {
 }
 
 .normal-image {
-  width: 80%; 
+  width: 80%;
   max-width: 500px;
-  height: 80%; 
+  height: 80%;
   max-height: 500px;
-  border-radius: 8px; 
+  border-radius: 8px;
 }
 
 
 ion-button:hover {
   --background: #357abd;
+  /* Couleur légèrement plus foncée au survol */
 }

@@ -1,5 +1,5 @@
 ion-content {
-    --background: #f4f4f4;
+    --background: #242424;
 }
 
 ion-header {
@@ -24,7 +24,7 @@ ion-header {
 }
 
 .task-card {
-    background-color: #242424;
+    background-color: #CCCC;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -49,7 +49,7 @@ ion-header {
     h2 {
         margin: 0;
         font-size: 1rem;
-        color: #FFFF;
+        color: black;
     }
 
     img {
@@ -65,7 +65,7 @@ ion-header {
     display: flex;
     justify-content: space-around;
     padding: 8px;
-    background-color: #242424;
+    background-color: #CCCC;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
     ion-button {

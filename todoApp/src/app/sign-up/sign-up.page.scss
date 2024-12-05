@@ -1,3 +1,18 @@
+ion-header {
+    background: linear-gradient(135deg, #4a90e2, #9013fe);
+    color: white;
+
+    ion-toolbar {
+        --background: transparent;
+    }
+
+    ion-title {
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+}
+
+
 .signUp-button {
     margin-top: 20px;
 }

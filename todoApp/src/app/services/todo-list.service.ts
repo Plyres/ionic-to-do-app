@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ToDoContent } from '../model/todo-content';
 import { AuthService } from './auth.service';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { CameraService } from './camera.service';
 @Injectable({
   providedIn: 'root'
