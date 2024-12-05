@@ -3,7 +3,8 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ToDoContent } from '../model/todo-content';
-import { CameraResultType } from '@capacitor/camera';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-register',
@@ -11,15 +12,21 @@ import { CameraResultType } from '@capacitor/camera';
   styleUrls: ['./sign-up.page.scss'],
 })
 export class SignUpPage {
-  email: string = '';
-  password: string = '';
+  signUpForm: FormGroup;
   todoList: Array<ToDoContent> = [];
-
+  
+  
   constructor(
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController
-  ) { }
+    private alertController: AlertController,
+    private formBuilder: FormBuilder
+  ) {
+    this.signUpForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(5)]]
+    });
+   }
 
   async register() {
     try {
@@ -32,7 +39,9 @@ export class SignUpPage {
       };
       
       this.todoList.push(newTodo);
-      await this.authService.register(this.email, this.password, this.todoList);
+      const email = this.signUpForm.controls["email"].value;
+      const password = this.signUpForm.controls["password"].value;
+      await this.authService.register(email, password, this.todoList);
       const alert = await this.alertController.create({
         header: 'Success',
         message: 'Registration successful. Please log in.',

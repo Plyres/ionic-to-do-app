@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ToDoContent } from '../model/todo-content';
 import { AuthService } from './auth.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { CameraService } from './camera.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +12,7 @@ export class TodoListService {
 
   todoList: ToDoContent[] = [];
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private cameraService: CameraService) {
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
       this.userId = JSON.parse(currentUser).email;
@@ -71,24 +72,17 @@ export class TodoListService {
 
   async takePictureForTodo(todoId: string): Promise<void> {
     try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.DataUrl,
-        source: CameraSource.Camera
-      });
+      const imageUrl = await this.cameraService.takePicture();
       
-      if (image.dataUrl) {
+      if (imageUrl) {
         const todo = this.getTodoById(todoId);
         if (todo) {
-         
-          todo.imageUrl = image.dataUrl;
-          console.log(todo.imageUrl)
+          todo.imageUrl = imageUrl;
           this.updateTodo(todo);
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la prise de photo', error);
+      console.error('Erreur lors de la prise de photo pour la todo', error);
       throw error;
     }
   }

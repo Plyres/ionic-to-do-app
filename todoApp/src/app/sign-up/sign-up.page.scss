@@ -1,3 +1,18 @@
-.sign-up-button {
+.signUp-button {
     margin-top: 20px;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+
+    p {
+        margin: 0;
+        font-size: 14px;
+
+        a {
+            color: var(--ion-color-primary);
+            font-weight: bold;
+        }
+    }
 }

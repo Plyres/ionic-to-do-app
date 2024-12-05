@@ -1,56 +1,70 @@
-ion-header {
-    background-color: #4a90e2; /* Couleur d'arrière-plan */
-  }
-  
-  ion-content {
-    background-color: #f4f4f4; /* Couleur d'arrière-plan de la page */
-    
-    h2 {
-      margin-top: 16px;
-      text-align: center;
-      font-weight: bold;
-      color: #333; /* Couleur du texte */
-      font-size: 1.5em; /* Taille du texte */
-    }
-  
-    p {
-      margin-top: 12px;
-      margin-left: 16px;
-      margin-right: 16px;
-      font-size: 1.1em; /* Taille du texte */
-      color: #666; /* Couleur du texte */
-      
-      strong {
-        color: #333; /* Couleur pour les textes en gras */
-      }
-    }
-  
-  }
-  
-  ion-button {
-     display:block;
-     margin-left:auto;
-     margin-right:auto;
-     margin-top:20px; 
-     --background:#4a90e2; 
-     --color:white;
-  
-     &:hover {
-       opacity:.8; 
-     }
-  }
 
-  .image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 16px 0; // Ajoutez un peu d'espace autour de l'image
-  }
-  
-  .normal-image {
-    width: 80%; // Limitez la largeur du thumbnail à 80% de l'écran
-    max-width: 500px; // Vous pouvez définir une largeur maximale si nécessaire
-    height: 80%; // Limitez la largeur du thumbnail à 80% de l'écran
-    max-height: 500px; // Vous pouvez définir une largeur maximale si nécessaire
-    border-radius: 8px; // Optionnel : arrondir les coins de l'image
-  }
+ion-content {
+  --background: #242424;
+  padding: 16px;
+}
+
+ion-card {
+  --background: #CCCC;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: auto; 
+  width: calc(100% - 32px);
+  margin-top: 20px;
+}
+ion-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333333;
+}
+
+ion-card-content p {
+  font-size: 1rem;
+  margin: 8px 0;
+}
+
+ion-card-content p strong {
+  color: #4a90e2;
+}
+
+ion-card-content p {
+  font-size: 1rem;
+  margin: 8px 0;
+  color: #34495e;
+}
+
+ion-button {
+  margin-top: 20px;
+  --background: #4a90e2; 
+  --color: white; 
+  height: 50px; 
+  max-width: 1200px;
+  width: calc(100% - 32px); 
+  border-radius: 25px; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.normal-image {
+  width: 80%; 
+  max-width: 500px;
+  height: 80%; 
+  max-height: 500px;
+  border-radius: 8px; 
+}
+
+
+ion-button:hover {
+  --background: #357abd;
+}

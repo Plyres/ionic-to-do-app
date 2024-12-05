@@ -1,54 +1,43 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Todo List
-    </ion-title>
+    <ion-title>Todo List</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
-        <ion-icon name="log-out"></ion-icon>
+        <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Todo List</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="task-grid">
+    <div *ngFor="let todo of todoList" class="task-card" [class.completed]="todo.completed">
 
-  <div class="todo-container">
-    <ion-list>
-      <ion-item-sliding *ngFor="let todo of todoList">
-        <ion-item *ngIf="todo.toDoText != ''">
-          <ion-checkbox slot="start" (ionChange)="completeToDoContent(todo)"></ion-checkbox>
-          <ion-label [class.completed]="todo.completed" (click)="goToTaskDetail(todo.id)"> {{
-            todo.toDoText}}</ion-label>
-          <ion-thumbnail slot="end" *ngIf="todo.imageUrl">
-            <img [src]="todo.imageUrl">
-          </ion-thumbnail>
-          <ion-item-option color="primary" (click)="updateTodoTask(todo)">
-            <ion-icon name="create" slot="icon-only"></ion-icon>
-          </ion-item-option>
-          <ion-item-option color="danger" (click)="removeToDoTaskFromList(todo.id)">
-            <ion-icon name="trash" slot="icon-only"></ion-icon>
-          </ion-item-option>
-        </ion-item>
-      </ion-item-sliding>
-    </ion-list>
+      <div class="task-content" (click)="goToTaskDetail(todo.id)">
+        <h2>{{ todo.toDoText }}</h2>
+        <img *ngIf="todo.imageUrl" [src]="todo.imageUrl" alt="Task image">
+      </div>
+      <div class="task-actions">
+        <ion-button fill="clear" (click)="completeToDoContent(todo)">
+          <ion-icon [name]="todo.completed ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="updateTodoTask(todo)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="removeToDoTaskFromList(todo.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
   </div>
 
-  <form (ngSubmit)="addTodoTask()" [formGroup]="todoContentForm">
-    <div class="todo-add-button-container">
-      <ion-item>
-        <ion-input #todoText formControlName="newTodoText" [(ngModel)]="newTodoText" placeholder="Add a new todo"
-          required="true"></ion-input>
-        <ion-button fill="outline" class="todo-add-button" type="submit" [disabled]="todoContentForm.invalid">
-          Add
-        </ion-button>
-      </ion-item>
-    </div>
+  <form (ngSubmit)="addTodoTask()" [formGroup]="todoContentForm" class="add-task-form">
+    <ion-item lines="none" class="add-task-item">
+      <ion-input formControlName="newTodoText" placeholder="Add a new task" required></ion-input>
+      <ion-button fill="outline" type="submit" [disabled]="todoContentForm.invalid">
+        Add
+      </ion-button>
+    </ion-item>
   </form>
-
 </ion-content>

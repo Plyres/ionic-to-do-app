@@ -31,7 +31,7 @@ export class TodoListPage implements OnInit {
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     if (this.currentUser) {
-      this.todoList = this.currentUser.todoList;
+      this.todoList = this.currentUser.todoList.filter(task => task.toDoText !== '');
     } else {
       this.router.navigate(['/home']);
     }

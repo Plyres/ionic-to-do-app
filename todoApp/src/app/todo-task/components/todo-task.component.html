@@ -17,12 +17,14 @@
       <p><strong>Details:</strong> {{ todo.details }}</p>
     </ion-card-content>
   </ion-card>
-    
-    <div class="image-container" *ngIf="todo.imageUrl">
-      <img [src]="todo.imageUrl" class="normal-image" />
-    </div>
+  
   <ion-button (click)="addPhotoToTodo(todo.id)">
     <ion-icon name="camera" slot="start"></ion-icon>
     Ajouter une photo
   </ion-button>
+
+  <div class="image-container" *ngIf="todo.imageUrl">
+    <img [src]="todo.imageUrl" class="normal-image" />
+  </div>
+
 </ion-content>

@@ -4,16 +4,22 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <form (ngSubmit)="register()">
+<ion-content class="ion-padding">
+  <form [formGroup]="signUpForm" (ngSubmit)="register()">
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+      <ion-input type="email" formControlName="email"></ion-input>
     </ion-item>
+  
     <ion-item>
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+      <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
-    <ion-button expand="full" type="submit" class="sign-up-button">Sign in</ion-button>
+  
+    <ion-button expand="full" type="submit" class="signUp-button" [disabled]="signUpForm.invalid">Sign up</ion-button>
   </form>
+
+  <div class="login-link">
+      <p>Already have an account? <a routerLink="/home">Login here</a></p>
+  </div>
 </ion-content>

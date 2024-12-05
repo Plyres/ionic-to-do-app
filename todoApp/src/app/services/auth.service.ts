@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../model/user-model';
-import { ApiService } from '../api.service';
 import { ToDoContent } from '../model/todo-content';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,23 +24,6 @@ export class AuthService {
     this.apiService.postData(`users/${email}`, JSON.stringify(newUser)).subscribe(x => {x})
   }
 
-  // login(email: string, password: string): Observable<void> {
-  //   return this.apiService.getData(`users/${email}`).pipe(
-  //     map((response: any) => {
-  //       // Récupérer la première (et normalement unique) clé de l'objet response
-  //       const userKey = Object.keys(response)[0];
-  //       const user: User = response[userKey];
-  //       console.log(user)
-       
-  //       if (user && user.password === password) {
-  //         localStorage.setItem('currentUser', JSON.stringify(user));
-  //         this._isAuthenticated.next(true);
-  //       } else {
-  //         throw new Error('Invalid email or password');
-  //       }
-  //     })
-  //   );
-  // }
   login(email: string, password: string): Observable<void> {
     return this.apiService.getData(`users/${email}`).pipe(
       map((response: any) => {
