@@ -82,6 +82,7 @@ export class TodoListPage implements OnInit {
   }
 
   async updateTodoTask(todo: ToDoContent) {
+    const imageUrl = todo.imageUrl;
     const alert = await this.alertController.create({
       header: 'Update Todo',
       inputs: [
@@ -108,6 +109,7 @@ export class TodoListPage implements OnInit {
           handler: (data) => {
             todo.toDoText = data.toDoText;
             todo.details = data.details;
+            todo.imageUrl = imageUrl; 
             this.updateUserTodoList();
           }
         }

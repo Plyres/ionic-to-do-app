@@ -35,8 +35,12 @@ export class TodoTaskComponent  implements OnInit {
       this.todo = this.todoService.getTodoById(todoId);
     } catch (error) {
       console.error('Erreur lors de l\'ajout de la photo', error);
-      // Gérer l'erreur (par exemple, afficher un message à l'utilisateur)
     }
+  }
+
+  removeImage(task: ToDoContent) {
+    task.imageUrl = ''; // Réinitialiser l'URL de l'image
+    this.todoService.updateTodo(task); // Mettre à jour la liste des tâches ou enregistrer les modifications
   }
 
 }
