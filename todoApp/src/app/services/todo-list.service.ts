@@ -24,8 +24,10 @@ export class TodoListService {
   }
 
   getAllTodos(): ToDoContent[] {
-    return this.getCurrentUserTodoList();
+    const currentUser = this.authService.getCurrentUser();
+    return currentUser ? currentUser.todoList : [];
   }
+  
 
   getTodoById(id: string): ToDoContent | undefined {
     const todoList = this.getCurrentUserTodoList();
@@ -39,7 +41,7 @@ export class TodoListService {
 
     if (currentUser) {
       currentUser.todoList = todos; 
-      this.authService.updateCurrentUser(currentUser);
+      this.authService.updateCurrentUser(currentUser).subscribe();
     }
   }
 
@@ -83,6 +85,14 @@ export class TodoListService {
     } catch (error) {
       console.error('Erreur lors de la prise de photo pour la todo', error);
       throw error;
+    }
+  }
+
+  updateTodoDetails(todoId: string, updates: Partial<ToDoContent>) {
+    const todo = this.getTodoById(todoId);
+    if (todo) {
+      Object.assign(todo, updates);
+      this.updateTodo(todo);
     }
   }
 }

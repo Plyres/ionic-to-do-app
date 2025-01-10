@@ -41,8 +41,8 @@ export class AuthService {
         } else {
           throw new Error('Invalid response format');
         }
-  
-        if (user && user.password === password) {
+        const decryptedPassword = this.decryptPassword(user.password);
+        if (user && decryptedPassword === password) {
           localStorage.setItem('currentUser', JSON.stringify(user));
           this._isAuthenticated.next(true);
         } else {
@@ -51,6 +51,12 @@ export class AuthService {
       })
     );
   }
+
+  // Décryptage du mdp utilisateur
+  decryptPassword(encryptedPassword: string): string {
+    return atob(encryptedPassword); // Décodage Base64
+  }
+
 
   logout() {
     localStorage.removeItem('currentUser');

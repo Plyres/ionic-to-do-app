@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-title>Todo List</ion-title>
     <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="refreshTodoList()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
       <ion-button (click)="logout()">
         <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
@@ -12,31 +15,28 @@
 <ion-content class="ion-padding">
   <div class="task-grid">
     <div *ngFor="let todo of todoList" class="task-card" [class.completed]="todo.completed">
-
       <div class="task-content" (click)="goToTaskDetail(todo.id)">
         <h2>{{ todo.toDoText }}</h2>
+        <p class="task-preview">{{ getPreviewText(todo.details) }}</p> <!-- Aperçu du texte -->
         <img *ngIf="todo.imageUrl" [src]="todo.imageUrl" alt="Task image">
       </div>
       <div class="task-actions">
         <ion-button fill="clear" (click)="completeToDoContent(todo)">
           <ion-icon [name]="todo.completed ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" (click)="updateTodoTask(todo)">
-          <ion-icon name="create-outline"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" (click)="removeToDoTaskFromList(todo.id)">
+        <ion-button fill="clear" (click)="confirmRemoveTaskFromList(todo.id)">
           <ion-icon name="trash-outline"></ion-icon>
         </ion-button>
       </div>
     </div>
+  </div>  
 
-  </div>
-
+  <!-- Add Task Form -->
   <form (ngSubmit)="addTodoTask()" [formGroup]="todoContentForm" class="add-task-form">
     <ion-item lines="none" class="add-task-item">
-      <ion-input formControlName="newTodoText" placeholder="Add a new task" required></ion-input>
+      <ion-input formControlName="newTodoText" placeholder="New task" required></ion-input>
       <ion-button fill="outline" type="submit" [disabled]="todoContentForm.invalid">
-        Add
+        Add a new task
       </ion-button>
     </ion-item>
   </form>

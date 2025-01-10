@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ToDoContent } from '../model/todo-content';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 
 @Component({
@@ -28,6 +28,15 @@ export class SignUpPage {
     });
    }
 
+  // Simple encryption function
+  encryptPassword(password: string): string {
+    return btoa(password); // Base64 encoding
+  }
+  
+  get email() { return this.signUpForm.get('email') as FormControl; }
+  get password() { return this.signUpForm.get('password') as FormControl; }
+  
+
   async register() {
     try {
       const newTodo: ToDoContent = {
@@ -39,9 +48,10 @@ export class SignUpPage {
       };
       
       this.todoList.push(newTodo);
-      const email = this.signUpForm.controls["email"].value;
-      const password = this.signUpForm.controls["password"].value;
-      await this.authService.register(email, password, this.todoList);
+      const email = this.email;
+      const password = this.password;
+      const encryptedPassword = this.encryptPassword(password.value);
+      await this.authService.register(email.value, encryptedPassword, this.todoList);
       const alert = await this.alertController.create({
         header: 'Success',
         message: 'Registration successful. Please log in.',

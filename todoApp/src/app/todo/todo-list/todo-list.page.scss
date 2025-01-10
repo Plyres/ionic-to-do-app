@@ -82,10 +82,25 @@ ion-header {
     left: 16px;
     right: 16px;
     z-index: 1000;
-    background: #242424;
+    background: #303030;
 }
 
 .add-task-item {
     --background: #0000;
     --border-radius: 25px;
+}
+
+.refresh-icon {
+    --background: transparent; /* Transparent background */
+    --color: #ffffff; /* White color for the icon */
+}
+
+.refresh-icon:hover {
+    --color: #4a90e2; /* Change color on hover */
+}
+
+.task-preview {
+    font-size: 0.9em; /* Taille de police plus petite */
+    color: #666; /* Couleur gris pour indiquer que c'est un aperçu */
+    margin-top: 4px; /* Espacement au-dessus du texte d'aperçu */
 }

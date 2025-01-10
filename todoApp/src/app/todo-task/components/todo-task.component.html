@@ -1,32 +1,38 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/todo-list"></ion-back-button>
+      <ion-back-button  defaultHref="/todo-list"></ion-back-button>
     </ion-buttons>
-    <ion-title>Task Detail</ion-title>
+    <ion-title>Task details</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="todo">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{ todo.toDoText }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Status:</strong> {{ todo.completed ? 'Completed' : 'Pending' }}</p>
-      <p><strong>Details:</strong> {{ todo.details }}</p>
-    </ion-card-content>
-  </ion-card>
+<ion-content class="ion-padding" *ngIf="todo">
+  <ion-item>
+    <ion-label position="stacked">Title</ion-label>
+    <ion-input [(ngModel)]="todo.toDoText" (ionBlur)="updateTodoDetails()"></ion-input>
+  </ion-item>
 
-  <ion-button (click)="addPhotoToTodo(todo.id)">
-    <ion-icon name="camera" slot="start"></ion-icon>
-    Add a photo
+  <ion-item>
+    <ion-label position="stacked">Details</ion-label>
+    <ion-textarea [(ngModel)]="todo.details" (ionBlur)="updateTodoDetails()"></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Completed</ion-label>
+    <ion-toggle [checked]="todo.completed" disabled="true"></ion-toggle>
+  </ion-item>
+
+  <ion-button *ngIf="todo.imageUrl == ''"expand="block" (click)="addPhotoToTodo()">
+    Add photo
   </ion-button>
 
   <div class="image-container" *ngIf="todo.imageUrl">
     <img [src]="todo.imageUrl" class="normal-image" />
   </div>
-  <ion-button *ngIf="todo.imageUrl" color="danger" (click)="removeImage(todo)" fill="outline" class="remove-image-button">
-    <ion-icon name="trash-outline"></ion-icon> Delete photo
+
+  <ion-button *ngIf="todo.imageUrl" expand="block" color="danger" (click)="confirmRemoveImage()">
+    Delete photo
   </ion-button>
+  
 </ion-content>

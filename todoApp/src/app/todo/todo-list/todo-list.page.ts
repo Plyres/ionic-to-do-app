@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { ToDoContent } from 'src/app/model/todo-content';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/model/user-model';
-import { AlertController } from '@ionic/angular';
-import { CameraResultType } from '@capacitor/camera';
+import { AlertController, ToastController } from '@ionic/angular';
+import { TodoListService } from 'src/app/services/todo-list.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -17,11 +17,14 @@ export class TodoListPage implements OnInit {
   todoContentForm: FormGroup;
   currentUser: User | null = null;
   newTodoText: string = '';
+  previewText : string = '';
 
   constructor(
+    private todoService: TodoListService,
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {
     this.todoContentForm = new FormGroup({
       newTodoText: new FormControl('', Validators.required)
@@ -41,29 +44,126 @@ export class TodoListPage implements OnInit {
     this.router.navigate(['/todo-task', id]);
   }
 
+  loadTodos() {
+    this.todoList = this.todoService.getAllTodos();
+  }
+  
+  refreshTodoList() {
+    // Reload the todo list
+    this.loadTodos();
+  }
+
   completeToDoContent(todo: ToDoContent) {
     todo.completed = !todo.completed;
     this.updateUserTodoList();
   }
+  
 
-  addTodoTask() {
+  getPreviewText(details: string): string {
+    const maxLength = 50; // Longueur maximale de l'aperçu
+    return details.length > maxLength ? details.substring(0, maxLength) + '...' : details;
+}
+
+  async addTodoTask() {
     if (this.todoContentForm.valid) {
       const newTodo: ToDoContent = {
         id: Date.now().toString(),
-        toDoText:this.todoContentForm.controls["newTodoText"].value,
+        toDoText: this.todoContentForm.controls["newTodoText"].value,
         completed: false,
         details: '',
         imageUrl: ''
       };
-      this.todoList.push(newTodo);
-      this.updateUserTodoList();
-      this.todoContentForm.reset();
+      
+      const alert = await this.alertController.create({
+        header: 'Add Details',
+        message: 'Do you want to add details to this task?',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {
+              this.todoService.addTodoTask(newTodo);
+              this.todoList.push(newTodo); // Mise à jour de la vue locale
+              this.todoContentForm.reset();
+            },
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+              this.promptForDetails(newTodo);
+            },
+          },
+        ],
+      });
+  
+      await alert.present();
     }
   }
 
-  removeToDoTaskFromList(id: string) {
+
+  async promptForDetails(newTodo: ToDoContent) {
+    const alert = await this.alertController.create({
+      header: 'Enter Details',
+      inputs: [
+        {
+          name: 'details',
+          type: 'textarea',
+          placeholder: 'Enter task details here...',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Save',
+          handler: (data) => {
+            if (data.details) {
+              newTodo.details = data.details;
+              this.todoService.addTodoTask(newTodo);
+              this.todoList.push(newTodo); // Mise à jour de la vue locale
+              this.todoContentForm.reset();
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async confirmRemoveTaskFromList(id: string) {
+    const alert = await this.alertController.create({
+      header: 'Confirm removal',
+      message: 'Are you sure you want to delete this task ?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.removeToDoTaskFromList(id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async removeToDoTaskFromList(id: string) {
     this.todoList = this.todoList.filter(todo => todo.id !== id);
     this.updateUserTodoList();
+
+    const toast = await this.toastController.create({
+      message: 'Task has been deleted successfuly.',
+      duration: 2000,
+      position: 'top'
+    });
+    toast.present();
   }
 
   private updateUserTodoList() {
@@ -79,43 +179,5 @@ export class TodoListPage implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/home']);
-  }
-
-  async updateTodoTask(todo: ToDoContent) {
-    const imageUrl = todo.imageUrl;
-    const alert = await this.alertController.create({
-      header: 'Update Todo',
-      inputs: [
-        {
-          name: 'toDoText',
-          type: 'text',
-          value: todo.toDoText,
-          placeholder: 'Todo Text'
-        },
-        {
-          name: 'details',
-          type: 'textarea',
-          value: todo.details,
-          placeholder: 'Details'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        },
-        {
-          text: 'Update',
-          handler: (data) => {
-            todo.toDoText = data.toDoText;
-            todo.details = data.details;
-            todo.imageUrl = imageUrl; 
-            this.updateUserTodoList();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 }

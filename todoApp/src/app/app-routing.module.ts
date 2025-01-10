@@ -20,13 +20,13 @@ const routes: Routes = [
   {
     path: 'todo-list',
     loadChildren: () => import('./todo/todo-list/todo-list.module').then( m => m.TodoListPageModule),
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'todo-task/:id',
     component: TodoTaskComponent,
     pathMatch: 'full',
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   }
   
 

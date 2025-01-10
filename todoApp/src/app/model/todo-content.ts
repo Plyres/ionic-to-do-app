@@ -5,5 +5,5 @@ export interface ToDoContent {
     toDoText: string;
     completed: boolean;
     details: string;
-    imageUrl: string,
+    imageUrl: string;
 }
