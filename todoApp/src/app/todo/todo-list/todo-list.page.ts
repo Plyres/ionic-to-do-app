@@ -32,7 +32,9 @@ export class TodoListPage implements OnInit {
   }
 
   ngOnInit() {
+     //Récupération de l'utilisateur courant
     this.currentUser = this.authService.getCurrentUser();
+    //Vérification de l'utilisateur, s'il n'est pas connecté, on renvoie l'utilisateur à la page d'accueil (en plus du guard mis en place)
     if (this.currentUser) {
       this.todoList = this.currentUser.todoList.filter(task => task.toDoText !== '');
     } else {
@@ -40,30 +42,34 @@ export class TodoListPage implements OnInit {
     }
   }
 
+  //Navigue vers le détail de la tâche
   goToTaskDetail(id: string) {
     this.router.navigate(['/todo-task', id]);
   }
 
+  //Charge toute la liste des todo en filtrant la tâche initiale template vide
   loadTodos() {
-    this.todoList = this.todoService.getAllTodos();
+    this.todoList = this.todoService.getCurrentUserTodoList().filter(task => task.toDoText !== '');
   }
   
   refreshTodoList() {
-    // Reload the todo list
+    // Recharge l'affichage de la todo list
     this.loadTodos();
   }
 
+  //Passe l'état de la tâche à complétée
   completeToDoContent(todo: ToDoContent) {
     todo.completed = !todo.completed;
     this.updateUserTodoList();
   }
   
-
+  //Récupération d'une partie du texte de détails pour en faire un aperçu
   getPreviewText(details: string): string {
     const maxLength = 50; // Longueur maximale de l'aperçu
     return details.length > maxLength ? details.substring(0, maxLength) + '...' : details;
-}
+  }
 
+  //Ajout d'une tâche à la liste de todo
   async addTodoTask() {
     if (this.todoContentForm.valid) {
       const newTodo: ToDoContent = {
@@ -74,6 +80,7 @@ export class TodoListPage implements OnInit {
         imageUrl: ''
       };
       
+      //Demande à l'utilisateur s'il souhaite ajouter un détail dès la création de sa tâche
       const alert = await this.alertController.create({
         header: 'Add Details',
         message: 'Do you want to add details to this task?',
@@ -90,7 +97,7 @@ export class TodoListPage implements OnInit {
           {
             text: 'Yes',
             handler: () => {
-              this.promptForDetails(newTodo);
+              this.addDetailsDuringTaskCreation(newTodo);
             },
           },
         ],
@@ -100,8 +107,8 @@ export class TodoListPage implements OnInit {
     }
   }
 
-
-  async promptForDetails(newTodo: ToDoContent) {
+  //Pop up d'ajout de texte pour le détail de la tâche
+  async addDetailsDuringTaskCreation(newTodo: ToDoContent) {
     const alert = await this.alertController.create({
       header: 'Enter Details',
       inputs: [
@@ -119,12 +126,10 @@ export class TodoListPage implements OnInit {
         {
           text: 'Save',
           handler: (data) => {
-            if (data.details) {
               newTodo.details = data.details;
               this.todoService.addTodoTask(newTodo);
               this.todoList.push(newTodo); // Mise à jour de la vue locale
-              this.todoContentForm.reset();
-            }
+              this.todoContentForm.reset()
           },
         },
       ],
@@ -133,6 +138,7 @@ export class TodoListPage implements OnInit {
     await alert.present();
   }
 
+  //Pop up de confirmation de suppression de la tâche
   async confirmRemoveTaskFromList(id: string) {
     const alert = await this.alertController.create({
       header: 'Confirm removal',
@@ -154,18 +160,20 @@ export class TodoListPage implements OnInit {
     await alert.present();
   }
 
+  //Suppression de la tâche dans la liste
   async removeToDoTaskFromList(id: string) {
     this.todoList = this.todoList.filter(todo => todo.id !== id);
     this.updateUserTodoList();
 
     const toast = await this.toastController.create({
-      message: 'Task has been deleted successfuly.',
+      message: 'Your task has been deleted successfuly.',
       duration: 2000,
       position: 'top'
     });
     toast.present();
-  }
+  } 
 
+  //Mise à jour de la todo list lié à l'utilisateur
   private updateUserTodoList() {
     if (this.currentUser) {
       this.currentUser.todoList = this.todoList;
@@ -176,6 +184,7 @@ export class TodoListPage implements OnInit {
     }
   }
 
+  //Déconnexion de l'utilisateur
   logout() {
     this.authService.logout();
     this.router.navigate(['/home']);

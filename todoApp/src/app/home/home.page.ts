@@ -24,6 +24,7 @@ export class HomePage {
     });
   }
 
+  //Connexion de l'utilisateur
   login() {
     if (this.loginForm.valid) {
       const email = this.loginForm.controls["email"].value;
@@ -44,6 +45,7 @@ export class HomePage {
     }
   }
 
+  //Navigation vers la page d'inscription
   goToSignIn() {
     this.router.navigate(['/sign-in']);
   }

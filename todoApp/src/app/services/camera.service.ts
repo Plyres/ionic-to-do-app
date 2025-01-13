@@ -7,10 +7,11 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 export class CameraService {
   constructor() {}
 
+  //Appel d'une fonction native Camera pour permettre de prendre une photo et la lier à une tâche
   async takePicture(): Promise<string | undefined> {
     try {
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 100,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
         source: CameraSource.Camera
@@ -18,7 +19,6 @@ export class CameraService {
       
       return image.dataUrl;
     } catch (error) {
-      console.error('Erreur lors de la prise de photo', error);
       throw error;
     }
   }

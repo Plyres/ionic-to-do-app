@@ -17,21 +17,18 @@ export class TodoTaskComponent  implements OnInit {
   todo: ToDoContent | undefined;
 
   public task : ToDoContent = <ToDoContent>{}
-
-  public id : number = this.route.snapshot.params["id"];
-
+  id = this.route.snapshot.paramMap.get('id');
   constructor(private todoService: TodoListService, private route : ActivatedRoute,
     private alertController: AlertController, private toastController: ToastController) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-;
-    if (id) {
-      this.todo = this.todoService.getTodoById(id);
+    if (this.id) {
+      this.todo = this.todoService.getTodoById(this.id);
     }
 
   }
 
+  //Pop up de confirmation de suppression de l'image
   async confirmRemoveImage() {
     const alert = await this.alertController.create({
       header: 'Confirm removal',
@@ -53,17 +50,42 @@ export class TodoTaskComponent  implements OnInit {
     await alert.present();
   }
 
+  //Ajout d'une photo à la tâche choisie
   async addPhotoToTodo() {
     if (this.todo) {
       try {
         await this.todoService.takePictureForTodo(this.todo.id);
-        this.todo = this.todoService.getTodoById(this.todo.id);
+        
+        // Créer et afficher la popup de confirmation
+        const alert = await this.alertController.create({
+          header: 'Success',
+          message: 'Your image has been added successfully !',
+          buttons: ['OK']
+        });
+        await alert.present();
+  
+        // Attendre que l'utilisateur ferme la popup
+        await alert.onDidDismiss();
+  
+        // Recharger la page de manière transparente
+        if(this.id){
+          this.todo = this.todoService.getTodoById(this.id);
+        }
+  
       } catch (error) {
         console.error('Error adding the photo', error);
+        // Optionnel : Afficher une popup d'erreur
+        const errorAlert = await this.alertController.create({
+          header: 'Error',
+          message: 'An error happened during the upload',
+          buttons: ['OK']
+        });
+        await errorAlert.present();
       }
     }
   }
-  
+
+  //Suppression de l'image
   async removeImage() {
     if (this.todo) {
       this.todo.imageUrl = '';
@@ -78,6 +100,7 @@ export class TodoTaskComponent  implements OnInit {
     }
   }
 
+  //Mise à jour du détails
   updateTodoDetails() {
     if (this.todo) {
       this.todoService.updateTodoDetails(this.todo.id, this.todo);

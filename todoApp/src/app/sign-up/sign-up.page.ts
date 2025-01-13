@@ -28,7 +28,7 @@ export class SignUpPage {
     });
    }
 
-  // Simple encryption function
+  // Cryptage du mdp pour qu'il ne soit pas visible dans la base de données
   encryptPassword(password: string): string {
     return btoa(password); // Base64 encoding
   }
@@ -36,9 +36,24 @@ export class SignUpPage {
   get email() { return this.signUpForm.get('email') as FormControl; }
   get password() { return this.signUpForm.get('password') as FormControl; }
   
-
+  //Méthode d'inscription avec un formulaire avec validation du format de l'email et de la longueur du mdp + vérification que l'email n'est pas déjà dans la bdd
   async register() {
     try {
+      const email = this.email.value;
+      const password = this.password.value;
+
+      const emailExists = await this.authService.checkEmailExists(email).toPromise();
+      if (emailExists) {
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'This email is already used.',
+          buttons: ['OK']
+        });
+        await alert.present();
+        return;
+      }
+      
+      //Création d'une nouvelle tâche template vide pour permettre de l'ajouter dans le modèle de l'utilisateur 
       const newTodo: ToDoContent = {
         id: Date.now().toString(),
         toDoText: '',
@@ -48,10 +63,9 @@ export class SignUpPage {
       };
       
       this.todoList.push(newTodo);
-      const email = this.email;
-      const password = this.password;
-      const encryptedPassword = this.encryptPassword(password.value);
-      await this.authService.register(email.value, encryptedPassword, this.todoList);
+      
+      const encryptedPassword = this.encryptPassword(password);
+      await this.authService.register(email, encryptedPassword, this.todoList);
       const alert = await this.alertController.create({
         header: 'Success',
         message: 'Registration successful. Please log in.',

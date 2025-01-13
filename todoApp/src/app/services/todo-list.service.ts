@@ -18,22 +18,19 @@ export class TodoListService {
     }
   }
 
-  private getCurrentUserTodoList(): ToDoContent[] {
+  //Récupération de toutes les tâches d'un utilisateur
+  getCurrentUserTodoList(): ToDoContent[] {
     const currentUser = this.authService.getCurrentUser();
     return currentUser ? currentUser.todoList : [];
   }
 
-  getAllTodos(): ToDoContent[] {
-    const currentUser = this.authService.getCurrentUser();
-    return currentUser ? currentUser.todoList : [];
-  }
-  
-
+  //Récupération d'une tâche précise selon son ID
   getTodoById(id: string): ToDoContent | undefined {
     const todoList = this.getCurrentUserTodoList();
     return todoList.find(todo => todo.id === id);
   }
 
+  //Méthode d'ajout d'une tâche et mise à jour de l'utilisateur lié
   addTodoTask(todo: ToDoContent) {
     const todos = this.getCurrentUserTodoList();
     todos.push(todo);
@@ -45,6 +42,7 @@ export class TodoListService {
     }
   }
 
+  //Mise à jour de la tâche
   updateTodo(updatedTodo: ToDoContent) {
     const todos = this.getCurrentUserTodoList();
     const index = todos.findIndex(t => t.id === updatedTodo.id);
@@ -60,17 +58,7 @@ export class TodoListService {
     }
   }
 
-  removeToDoTaskFromList(id: string) {
-    const todos = this.getCurrentUserTodoList();
-    const updatedTodos = todos.filter(t => t.id !== id); 
-    const currentUser = this.authService.getCurrentUser();
-
-    if (currentUser) {
-      currentUser.todoList = updatedTodos;
-      this.authService.updateCurrentUser(currentUser);
-    }
-  }
-
+  //Méthode qui appelle la méthode de prise de photo + mets à jour la tâche
   async takePictureForTodo(todoId: string): Promise<void> {
     try {
       const imageUrl = await this.cameraService.takePicture();
@@ -83,11 +71,12 @@ export class TodoListService {
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la prise de photo pour la todo', error);
+
       throw error;
     }
   }
 
+  //Mise à jour du détail de la tâche
   updateTodoDetails(todoId: string, updates: Partial<ToDoContent>) {
     const todo = this.getTodoById(todoId);
     if (todo) {
